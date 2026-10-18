@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequência REM - Enciclopédia I.T.A.C.</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Frequência REM</h1>
+            <p>Instituto I.T.A.C. - Banco de Dados Restrito</p>
+        </div>
+        <nav>
+            <button onclick="changeTab('classes')">Classes</button>
+            <button onclick="changeTab('itens')">Itens & Equipamentos</button>
+            <button onclick="changeTab('monstros')">Anomalias (Monstros)</button>
+            <button onclick="openAdminLogin()" class="btn-admin">Acesso Restrito</button>
+        </nav>
+    </header>
+
+    <main id="main-container">
+        <!-- Tela de Listagem (Grid de Cards) -->
+        <section id="list-view">
+            <h2 id="section-title">Classes (Sonhadores)</h2>
+            <div id="cards-container" class="grid-container">
+                <!-- Os cards serão gerados pelo JavaScript aqui -->
+            </div>
+        </section>
+
+        <!-- Tela de Detalhes -->
+        <section id="detail-view" class="hidden">
+            <button onclick="closeDetails()" class="btn-back">◄ Voltar ao Arquivo</button>
+            <div id="detail-content" class="detail-card">
+                <!-- Conteúdo detalhado será injetado aqui -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Login Admin -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeModals()">&times;</span>
+            <h2>Credenciais I.T.A.C.</h2>
+            <p>Insira sua senha de autorização (padrão: rem123)</p>
+            <input type="password" id="admin-password" placeholder="Senha de Acesso">
+            <button onclick="checkPassword()">Autenticar</button>
+            <p id="login-error" class="error hidden">Acesso Negado. Senha incorreta.</p>
+        </div>
+    </div>
+
+    <!-- Modal do Painel Admin (Formulário) -->
+    <div id="admin-panel" class="modal hidden">
+        <div class="modal-content admin-form">
+            <span class="close" onclick="closeModals()">&times;</span>
+            <h2 id="admin-title">Adicionar/Editar Registro</h2>
+            
+            <input type="hidden" id="edit-id">
+            <input type="hidden" id="edit-category">
+            
+            <label>Nome:</label>
+            <input type="text" id="form-name" placeholder="Ex: O Tecelão da Realidade">
+            
+            <label>URL da Imagem (Sprite):</label>
+            <input type="text" id="form-image" placeholder="URL da imagem (ex: https://...)">
+            
+            <label>Resumo Breve (Aparece no Card):</label>
+            <textarea id="form-summary" rows="2" placeholder="Descrição curta..."></textarea>
+            
+            <label>Descrição Completa (Aparece na página de detalhes):</label>
+            <textarea id="form-description" rows="6" placeholder="Regras, status, história profunda..."></textarea>
+            
+            <div class="admin-actions">
+                <button onclick="saveItem()" class="btn-save">Salvar no Banco de Dados</button>
+                <button onclick="deleteItem()" id="btn-delete" class="btn-delete hidden">Excluir Registro</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
