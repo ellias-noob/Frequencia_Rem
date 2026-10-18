@@ -3,78 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frequência REM - Enciclopédia I.T.A.C.</title>
+    <title>Frequência REM - Arquivos I.T.A.C.</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;1,600&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="theme-blue">
     <header>
         <div class="logo">
-            <h1>Frequência REM</h1>
-            <p>Instituto I.T.A.C. - Banco de Dados Restrito</p>
+            <h1>FREQUÊNCIA REM</h1>
+            <p id="sub-logo">Terminal de Acesso I.T.A.C. v3.0</p>
         </div>
         <nav>
-            <button onclick="changeTab('classes')">Classes</button>
-            <button onclick="changeTab('itens')">Itens & Equipamentos</button>
-            <button onclick="changeTab('monstros')">Anomalias (Monstros)</button>
+            <button onclick="changeTab('classes')" id="btn-classes">Arquivos de Pessoal</button>
+            <button onclick="changeTab('itens')" id="btn-itens">Inventário Clínico</button>
+            <button onclick="changeTab('monstros')" id="btn-monstros">Registro de Anomalias</button>
             <button onclick="openAdminLogin()" class="btn-admin">Acesso Restrito</button>
         </nav>
     </header>
 
     <main id="main-container">
-        <!-- Tela de Listagem (Grid de Cards) -->
         <section id="list-view">
-            <h2 id="section-title">Classes (Sonhadores)</h2>
-            <div id="cards-container" class="grid-container">
-                <!-- Os cards serão gerados pelo JavaScript aqui -->
+            <h2 id="section-title">Classificação de Agentes</h2>
+            <div id="cards-container">
+                <!-- Conteúdo injetado via JS -->
             </div>
         </section>
 
-        <!-- Tela de Detalhes -->
         <section id="detail-view" class="hidden">
-            <button onclick="closeDetails()" class="btn-back">◄ Voltar ao Arquivo</button>
+            <button onclick="closeDetails()" class="btn-back">◄ Retornar ao Índice</button>
             <div id="detail-content" class="detail-card">
-                <!-- Conteúdo detalhado será injetado aqui -->
+                <!-- Detalhes injetados via JS -->
             </div>
         </section>
     </main>
 
-    <!-- Modal de Login Admin -->
+    <!-- Modais (Login e Form) mantidos ocultos -->
     <div id="login-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="closeModals()">&times;</span>
-            <h2>Credenciais I.T.A.C.</h2>
-            <p>Insira sua senha de autorização (padrão: rem123)</p>
-            <input type="password" id="admin-password" placeholder="Senha de Acesso">
-            <button onclick="checkPassword()">Autenticar</button>
-            <p id="login-error" class="error hidden">Acesso Negado. Senha incorreta.</p>
+            <h2>Autorização de Segurança</h2>
+            <input type="password" id="admin-password" placeholder="Senha do Terminal (rem123)">
+            <button onclick="checkPassword()">Acessar</button>
+            <p id="login-error" class="error hidden">Acesso Negado.</p>
         </div>
     </div>
 
-    <!-- Modal do Painel Admin (Formulário) -->
     <div id="admin-panel" class="modal hidden">
         <div class="modal-content admin-form">
             <span class="close" onclick="closeModals()">&times;</span>
-            <h2 id="admin-title">Adicionar/Editar Registro</h2>
+            <h2 id="admin-title">Modificar Registro</h2>
+            <input type="hidden" id="edit-id"><input type="hidden" id="edit-category">
             
-            <input type="hidden" id="edit-id">
-            <input type="hidden" id="edit-category">
+            <label>Subgrupo (Apenas para Classes):</label>
+            <input type="text" id="form-group" placeholder="Ex: Sonhadores, Suporte, etc.">
             
             <label>Nome:</label>
-            <input type="text" id="form-name" placeholder="Ex: O Tecelão da Realidade">
+            <input type="text" id="form-name" placeholder="Nome do Elemento">
             
-            <label>URL da Imagem (Sprite):</label>
-            <input type="text" id="form-image" placeholder="URL da imagem (ex: https://...)">
+            <label>URL da Imagem:</label>
+            <input type="text" id="form-image" placeholder="URL da imagem">
             
-            <label>Resumo Breve (Aparece no Card):</label>
-            <textarea id="form-summary" rows="2" placeholder="Descrição curta..."></textarea>
+            <label>Resumo Breve:</label>
+            <textarea id="form-summary" rows="2"></textarea>
             
-            <label>Descrição Completa (Aparece na página de detalhes):</label>
-            <textarea id="form-description" rows="6" placeholder="Regras, status, história profunda..."></textarea>
+            <label>Dossiê Completo (Ações e Status):</label>
+            <textarea id="form-description" rows="6"></textarea>
             
             <div class="admin-actions">
-                <button onclick="saveItem()" class="btn-save">Salvar no Banco de Dados</button>
-                <button onclick="deleteItem()" id="btn-delete" class="btn-delete hidden">Excluir Registro</button>
+                <button onclick="saveItem()" class="btn-save">Registrar</button>
+                <button onclick="deleteItem()" id="btn-delete" class="btn-delete hidden">Excluir</button>
             </div>
         </div>
     </div>
