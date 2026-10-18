@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequência REM - I.T.A.C. OS</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;1,600&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-blue">
+    <!-- Top Navigation (Novas Abas) -->
+    <header class="top-navbar">
+        <div class="logo">
+            <h1>FREQ. REM</h1>
+        </div>
+        <nav class="main-tabs">
+            <button onclick="switchMainTab('jogadores')" id="tab-jogadores">Jogadores (Fichas)</button>
+            <button onclick="switchMainTab('mestres')" id="tab-mestres" class="active">Mestres (Banco de Dados)</button>
+            <button onclick="switchMainTab('mundo')" id="tab-mundo">Mundo (Mapa Beta)</button>
+        </nav>
+        <div class="user-profile">
+            <button onclick="openAdminLogin()" class="btn-admin" id="auth-btn">Modo Mestre: OFF</button>
+        </div>
+    </header>
+
+    <div class="app-layout">
+        <!-- Sidebar Esquerda (Retrátil) -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            </div>
+            <nav class="sidebar-nav" id="sidebar-db-nav">
+                <button onclick="changeSubTab('classes')" id="btn-classes" class="active" title="Arquivos de Pessoal">
+                    <span class="icon">👥</span> <span class="text">Arquivos de Pessoal</span>
+                </button>
+                <button onclick="changeSubTab('itens')" id="btn-itens" title="Inventário Clínico">
+                    <span class="icon">💊</span> <span class="text">Inventário Clínico</span>
+                </button>
+                <button onclick="changeSubTab('monstros')" id="btn-monstros" title="Registro de Anomalias">
+                    <span class="icon">👁️</span> <span class="text">Registro de Anomalias</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Área Principal de Conteúdo -->
+        <main id="main-content">
+            
+            <!-- VIEW: MESTRES (Banco de Dados Antigo) -->
+            <section id="view-mestres" class="view-section">
+                <div id="list-view">
+                    <h2 id="section-title">Classificação de Agentes</h2>
+                    <div id="cards-container"></div>
+                </div>
+                <div id="detail-view" class="hidden">
+                    <button onclick="closeDetails()" class="btn-back">◄ Retornar ao Índice</button>
+                    <div id="detail-content" class="detail-card"></div>
+                </div>
+            </section>
+
+            <!-- VIEW: JOGADORES (Fichas) -->
+            <section id="view-jogadores" class="view-section hidden">
+                <h2>Fichas de Sonhadores Ativos</h2>
+                <button class="btn-primary" onclick="openFichaForm()">+ Nova Ficha de Personagem</button>
+                <div id="fichas-container" class="grid-container" style="margin-top: 20px;">
+                    <!-- Fichas injetadas via JS -->
+                </div>
+            </section>
+
+            <!-- VIEW: MUNDO (Mapa Interativo) -->
+            <section id="view-mundo" class="view-section hidden">
+                <h2>Cartografia do Reverso (Beta)</h2>
+                <p>Radar de Anomalias e Posição de Esquadrões.</p>
+                <div class="map-container">
+                    <!-- Mapa usando iframe do OpenStreetMap com filtro CSS para parecer dark/radar -->
+                    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.58%2C-46.64%2C-23.56&amp;layer=mapnik" style="border: 1px solid var(--border-color); border-radius: var(--radius-md);" allowfullscreen="" loading="lazy"></iframe>
+                    <div class="map-overlay">
+                        <div class="marker monster" style="top: 30%; left: 45%;">⚠️ Anomalia VDT-2</div>
+                        <div class="marker player" style="top: 50%; left: 60%;">🔵 Esquadrão Alpha</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modais de Criação e Login -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeModals()">&times;</span>
+            <h2>Autorização de Mestre</h2>
+            <input type="password" id="admin-password" placeholder="Senha do Terminal (rem123)">
+            <button class="btn-primary" onclick="checkPassword()">Acessar</button>
+            <p id="login-error" class="error hidden">Acesso Negado.</p>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="modal hidden">
+        <div class="modal-content admin-form">
+            <span class="close" onclick="closeModals()">&times;</span>
+            <h2 id="admin-title">Modificar Registro</h2>
+            <input type="hidden" id="edit-id"><input type="hidden" id="edit-category">
+            <label>Subgrupo:</label><input type="text" id="form-group" placeholder="Ex: Sonhadores, Suporte...">
+            <label>Nome:</label><input type="text" id="form-name">
+            <label>URL da Imagem:</label><input type="text" id="form-image">
+            <label>Resumo Breve:</label><textarea id="form-summary" rows="2"></textarea>
+            <label>Dossiê Completo:</label><textarea id="form-description" rows="6"></textarea>
+            <div class="admin-actions">
+                <button onclick="saveItem()" class="btn-save">Registrar</button>
+                <button onclick="deleteItem()" id="btn-delete" class="btn-delete hidden">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
