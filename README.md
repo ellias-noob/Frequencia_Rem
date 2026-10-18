@@ -1,4 +1,4 @@
-# 👁️ Frequência REM
+#  Frequência REM
 
 O universo de **Frequência REM** é um mergulho profundo no terror psicológico e na metafísica dos sonhos, uma obra original idealizada pelo autor **Jose neto**. Neste sistema de RPG de mesa, os limites entre o mundo desperto e os pesadelos se rompem. Os jogadores assumem o papel de Sonhadores, agentes recrutados pela organização secreta **I.T.A.C.**, que arriscam sua própria lucidez para enfrentar Anomalias — manifestações grotescas de traumas e fobias que tentam devorar a realidade.
 
@@ -18,9 +18,5 @@ A união entre a construção de mundo densa e perturbadora escrita por Jose net
 
 </div>
 
----
 
-## 🛠️ Tecnologias Utilizadas no Sistema Web
-* **HTML5** — Estruturação de dados confidenciais da I.T.A.C.
-* **CSS3** — Interface imersiva e interface no estilo terminal onírico.
-* **JavaScript** — Mecânicas do painel administrativo oculto e interações de segurança.
+
