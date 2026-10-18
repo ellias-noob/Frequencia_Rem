@@ -1,50 +1,16 @@
-// Dados refatorados para incluir a hierarquia (inspirado em sites de raças/classes RPG)
+// Dados simulados expandidos com suporte a personagens
 const defaultData = {
     classes: [
-        {
-            id: 'c1',
-            group: 'Sonhadores (Incursores Lúcidos)',
-            name: 'O Tecelão da Realidade',
-            image: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=600&auto=format&fit=crop',
-            summary: 'Moldam a geografia onírica através de Intelecto.',
-            description: 'ATRIBUTO CHAVE: Intelecto (INT).\n\nCOMO AGEM:\nUsam geometria sagrada e lógica para encurralar Anomalias. Eles "editam" a planta do ambiente.\n\nHABILIDADE PRINCIPAL - Renderização Forçada:\nPode alterar portas, paredes ou escadas dentro do Reverso gastando 1d4 de Lucidez.'
-        },
-        {
-            id: 'c2',
-            group: 'Sonhadores (Incursores Lúcidos)',
-            name: 'O Andarilho da Fenda',
-            image: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=600&auto=format&fit=crop',
-            summary: 'Ladino que usa falhas da matrix onírica.',
-            description: 'ATRIBUTO CHAVE: Agilidade (AGI).\n\nCOMO AGEM:\nSe movem pelo "código quebrado" dos sonhos, explorando o Noclip.\n\nHABILIDADE PRINCIPAL - Salto Liminal:\nPermite atravessar matéria sólida uma vez por cena para flanquear entidades.'
-        },
-        {
-            id: 'c3',
-            group: 'Equipe de Ancoragem (Apoio Tático)',
-            name: 'Guardião de Frequência',
-            image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=600&auto=format&fit=crop',
-            summary: 'Mantém o esquadrão são usando emissores.',
-            description: 'ATRIBUTO CHAVE: Vigor (VIG).\n\nCOMO AGEM:\nFicam na retaguarda física no mundo real ou geram zonas de segurança no sonho.\n\nHABILIDADE PRINCIPAL - Barreira Estática:\nReduz todo dano mental da equipe em 2 pontos enquanto o Guardião mantiver concentração.'
-        }
+        { id: 'c1', group: 'Sonhadores', name: 'Tecelão da Realidade', image: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?q=80&w=600&auto=format&fit=crop', summary: 'Moldam a geografia onírica através de Intelecto.', description: 'Especialistas em geometria sagrada.' }
     ],
     itens: [
-        {
-            id: 'i1',
-            group: 'Consumíveis I.T.A.C.',
-            name: 'Água de Amêndoa Refinada',
-            image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop',
-            summary: 'Estabiliza a sanidade. Cheiro de hospital.',
-            description: 'USO: Padrão.\n\nEFEITO:\nCura 2d4 de Estresse Mental. Desenvolvido nos laboratórios clínicos da organização. Possui um gosto estéril e sintético.'
-        }
+        { id: 'i1', group: 'Consumíveis', name: 'Água de Amêndoa Refinada', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop', summary: 'Estabiliza a sanidade.', description: 'Cura 2d4 de Estresse Mental.' }
     ],
     monstros: [
-        {
-            id: 'm1',
-            group: 'Ameaças Paranormais - Nível VDT',
-            name: 'O Rosto na Estática',
-            image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop',
-            summary: 'Manifestação do Medo do Desconhecido. Corrompe eletrônicos.',
-            description: 'TIPO: Medo Enraizado.\n\nCOMPORTAMENTO:\nAssombra transmissões de rádio e visões periféricas. Exige testes rigorosos de Vontade para não causar paralisia investigativa.'
-        }
+        { id: 'm1', group: 'VDT', name: 'O Rosto na Estática', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop', summary: 'Corrompe eletrônicos.', description: 'Assombra transmissões de rádio.' }
+    ],
+    fichas: [
+        { id: 'f1', name: 'Elias', classe: 'Andarilho da Fenda', hp: '24/24', lucidez: '12/15', image: 'https://via.placeholder.com/400x300/1a1a2e/33ccff?text=Ficha+Elias' }
     ]
 };
 
@@ -53,35 +19,57 @@ let currentCategory = 'classes';
 let isAdmin = false;
 
 function initDB() {
-    const saved = localStorage.getItem('frequenciaREM_v2');
+    const saved = localStorage.getItem('frequenciaREM_v3');
     if (saved) db = JSON.parse(saved);
     else { db = JSON.parse(JSON.stringify(defaultData)); saveDB(); }
-    changeTab('classes');
+    switchMainTab('mestres');
 }
 
-function saveDB() { localStorage.setItem('frequenciaREM_v2', JSON.stringify(db)); }
+function saveDB() { localStorage.setItem('frequenciaREM_v3', JSON.stringify(db)); }
 
-function changeTab(category) {
-    currentCategory = category;
+// Controle das Abas Principais (Topo)
+function switchMainTab(tab) {
+    document.querySelectorAll('.main-tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
     
-    // Configura o visual com base no tipo de página (Inspirado no pedido do usuário)
+    document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
+    document.getElementById('view-' + tab).classList.remove('hidden');
+
+    const sidebar = document.getElementById('sidebar');
+    
+    if(tab === 'mestres') {
+        sidebar.style.display = 'flex'; // Mostra sidebar no modo Mestres
+        changeSubTab(currentCategory);
+    } else if (tab === 'jogadores') {
+        sidebar.style.display = 'none'; // Esconde sidebar
+        document.body.className = 'theme-blue';
+        renderFichas();
+    } else if (tab === 'mundo') {
+        sidebar.style.display = 'none'; // Esconde sidebar
+        document.body.className = 'theme-purple';
+    }
+}
+
+// Controle do Sidebar (Menu Retrátil)
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// Controle das Sub-Abas do Banco de Dados (Mestres)
+function changeSubTab(category) {
+    currentCategory = category;
     const bodyObj = document.body;
     bodyObj.className = ''; 
     
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-' + category).classList.add('active');
 
-    const titles = {
-        'classes': 'Arquivos de Pessoal (Classes)',
-        'itens': 'Banco de Dados Clínico (Itens)',
-        'monstros': 'Ordem de Contenção (Anomalias)'
-    };
-    
+    const titles = { 'classes': 'Arquivos de Pessoal', 'itens': 'Inventário Clínico', 'monstros': 'Registro de Anomalias' };
     document.getElementById('section-title').innerText = titles[category];
 
-    if(category === 'classes') bodyObj.classList.add('theme-blue');     // Fantasia Mística (Eldoria)
-    if(category === 'itens') bodyObj.classList.add('theme-white');      // Estéril/Liminal (Backrooms)
-    if(category === 'monstros') bodyObj.classList.add('theme-purple');  // Sombrio/Investigação (Ordem Paranormal)
+    if(category === 'classes') bodyObj.classList.add('theme-blue');
+    if(category === 'itens') bodyObj.classList.add('theme-white');
+    if(category === 'monstros') bodyObj.classList.add('theme-purple');
     
     document.getElementById('list-view').classList.remove('hidden');
     document.getElementById('detail-view').classList.add('hidden');
@@ -89,24 +77,25 @@ function changeTab(category) {
     renderCards(category);
 }
 
+// Renderiza Itens do Banco de Dados (Mestres)
 function renderCards(category) {
     const container = document.getElementById('cards-container');
     container.innerHTML = '';
     
-    // Sistema de separação hierárquica (Agrupar itens por 'group')
     const groupedData = {};
-    db[category].forEach(item => {
-        const g = item.group || 'Geral';
-        if(!groupedData[g]) groupedData[g] = [];
-        groupedData[g].push(item);
-    });
+    if(db[category]){
+        db[category].forEach(item => {
+            const g = item.group || 'Geral';
+            if(!groupedData[g]) groupedData[g] = [];
+            groupedData[g].push(item);
+        });
+    }
 
     if (isAdmin) {
         const createBtn = document.createElement('button');
+        createBtn.className = "btn-primary";
         createBtn.innerText = "+ Adicionar Novo Arquivo";
         createBtn.style.marginBottom = "20px";
-        createBtn.style.width = "100%";
-        createBtn.style.padding = "15px";
         createBtn.onclick = () => openAdminForm(null, category);
         container.appendChild(createBtn);
     }
@@ -114,11 +103,7 @@ function renderCards(category) {
     for (const [groupName, items] of Object.entries(groupedData)) {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'category-group';
-        
-        const groupTitle = document.createElement('h3');
-        groupTitle.className = 'category-title';
-        groupTitle.innerText = groupName;
-        groupDiv.appendChild(groupTitle);
+        groupDiv.innerHTML = `<h3 class="category-title">${groupName}</h3>`;
         
         const gridDiv = document.createElement('div');
         gridDiv.className = 'grid-container';
@@ -127,7 +112,7 @@ function renderCards(category) {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="${item.image}" onerror="this.src='https://via.placeholder.com/400x300/111/fff?text=Sem+Imagem'">
+                <img src="${item.image}" onerror="this.src='https://via.placeholder.com/400x300/111/fff?text=Registro'">
                 <div class="card-content">
                     <h3>${item.name}</h3>
                     <p>${item.summary}</p>
@@ -136,23 +121,64 @@ function renderCards(category) {
             if (isAdmin) {
                 const editBtn = document.createElement('button');
                 editBtn.innerText = "Editar";
-                editBtn.style.position = "absolute"; editBtn.style.top = "10px"; editBtn.style.right = "10px";
+                editBtn.style = "position:absolute; top:10px; right:10px; background:#000; color:#fff; padding:5px 10px; border:1px solid #fff;";
                 editBtn.onclick = (e) => { e.stopPropagation(); openAdminForm(item.id, category); };
                 card.appendChild(editBtn);
             }
             card.onclick = () => showDetails(item);
             gridDiv.appendChild(card);
         });
-        
         groupDiv.appendChild(gridDiv);
         container.appendChild(groupDiv);
     }
 }
 
+// Renderiza Fichas de Jogadores
+function renderFichas() {
+    const container = document.getElementById('fichas-container');
+    container.innerHTML = '';
+    
+    if(!db.fichas) db.fichas = [];
+    
+    db.fichas.forEach(f => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="${f.image}" onerror="this.src='https://via.placeholder.com/400x300/111/fff?text=Ficha'">
+            <div class="card-content">
+                <h3>${f.name}</h3>
+                <p style="color:var(--accent-color)">${f.classe}</p>
+                <div class="ficha-status">
+                    <span style="color:#ff4d4d">❤️ PV: ${f.hp}</span>
+                    <span style="color:#4da6ff">🧠 LUC: ${f.lucidez}</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function openFichaForm() {
+    const nome = prompt("Nome do Personagem:");
+    if(!nome) return;
+    const classe = prompt("Classe/Arquétipo:");
+    
+    if(!db.fichas) db.fichas = [];
+    db.fichas.push({
+        id: 'f_' + Date.now(),
+        name: nome,
+        classe: classe || 'Desconhecido',
+        hp: '20/20',
+        lucidez: '10/10',
+        image: 'https://via.placeholder.com/400x300/111/fff?text=Ficha'
+    });
+    saveDB();
+    renderFichas();
+}
+
 function showDetails(item) {
     document.getElementById('list-view').classList.add('hidden');
     const dContent = document.getElementById('detail-content');
-    
     dContent.innerHTML = `
         <div class="detail-header">
             <img src="${item.image}" onerror="this.src='https://via.placeholder.com/300x400/111/fff?text=Registro'">
@@ -163,21 +189,32 @@ function showDetails(item) {
         </div>
         <div class="detail-body">${item.description}</div>
     `;
-    
     document.getElementById('detail-view').classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function closeDetails() { changeTab(currentCategory); }
+function closeDetails() { document.getElementById('detail-view').classList.add('hidden'); document.getElementById('list-view').classList.remove('hidden'); }
 
+// Autenticação Mestre (Painel Admin)
 function openAdminLogin() {
-    if (isAdmin) { isAdmin = false; renderCards(currentCategory); }
-    else { document.getElementById('login-modal').classList.remove('hidden'); document.getElementById('login-error').classList.add('hidden'); }
+    if (isAdmin) { 
+        isAdmin = false; 
+        document.getElementById('auth-btn').innerText = "Modo Mestre: OFF";
+        document.getElementById('auth-btn').style.background = "transparent";
+        renderCards(currentCategory); 
+    } else { 
+        document.getElementById('login-modal').classList.remove('hidden'); 
+        document.getElementById('login-error').classList.add('hidden'); 
+    }
 }
 
 function checkPassword() {
     if (document.getElementById('admin-password').value === 'rem123') {
-        isAdmin = true; closeModals(); renderCards(currentCategory);
+        isAdmin = true; 
+        closeModals(); 
+        document.getElementById('auth-btn').innerText = "Modo Mestre: ON";
+        document.getElementById('auth-btn').style.background = "var(--accent-color)";
+        document.getElementById('auth-btn').style.color = "var(--bg-color)";
+        renderCards(currentCategory);
     } else { document.getElementById('login-error').classList.remove('hidden'); }
 }
 
@@ -186,6 +223,7 @@ function closeModals() {
     document.getElementById('admin-panel').classList.add('hidden');
 }
 
+// Formulário de Criação (Banco de Dados)
 function openAdminForm(id, category) {
     document.getElementById('admin-panel').classList.remove('hidden');
     document.getElementById('edit-category').value = category;
@@ -229,7 +267,7 @@ function saveItem() {
 }
 
 function deleteItem() {
-    if(confirm("Excluir arquivo definitivamente?")) {
+    if(confirm("Excluir arquivo permanentemente?")) {
         const cat = document.getElementById('edit-category').value;
         db[cat] = db[cat].filter(i => i.id !== document.getElementById('edit-id').value);
         saveDB(); closeModals(); renderCards(currentCategory);
